@@ -82,3 +82,10 @@ myFoldl'''' f z xs = foldr f' id xs z
   where f' x k z  = k (f z x)
 ~~~
 
+or equivalently
+
+~~~haskell
+myFoldl''''' :: (a -> b -> a) -> a -> [b] -> a
+myFoldl''''' f z xs = foldr f' id xs z
+  where f' x k = \z -> k (f z x)
+~~~
