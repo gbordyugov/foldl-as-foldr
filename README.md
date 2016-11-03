@@ -1,3 +1,6 @@
+Derivation
+----------
+
 The definition of the right fold
 
 ~~~haskell
@@ -21,8 +24,8 @@ Using an accumulator function a la SICP, we rewrite it as
 ~~~haskell
 myFoldl' :: (a -> b -> a) -> a -> [b] -> a
 myFoldl' f z xs = g z xs where
-  g z []     = z
-  g z (x:xs) = g (f z x) xs
+  g y []     = z
+  g y (x:xs) = g (f y x) xs
 ~~~
 
 Swapping the arguments of the accumulator
@@ -30,8 +33,8 @@ Swapping the arguments of the accumulator
 ~~~haskell
 myFoldl'' :: (a -> b -> a) -> a -> [b] -> a
 myFoldl'' f z xs = g xs z where
-  g [] z     = z
-  g (x:xs) z = g xs (f z x)
+  g [] y     = z
+  g (x:xs) y = g xs (f y x)
 ~~~
 
 stripping the second argument of g
@@ -40,7 +43,7 @@ stripping the second argument of g
 myFoldl''' :: (a -> b -> a) -> a -> [b] -> a
 myFoldl''' f z xs = g xs z where
   g []     = id
-  g (x:xs) = \z -> g xs (f z x)
+  g (x:xs) = \y -> g xs (f y x)
 ~~~
 
 
@@ -61,17 +64,17 @@ v = id
 and
 
 ~~~
-f' x (g xs)   = \z -> g xs (f z x) =>
-f' x (g xs) z = g xs (f z x) =>
-f' x k z      = k (f z x) =>
-f'            = \x k z -> k (f z x)
+f' x (g xs)   = \y -> g xs (f y x) =>
+f' x (g xs) y = g xs (f y x) =>
+f' x k y      = k (f y x) =>
+f'            = \x k y -> k (f y x)
 ~~~
 
 where I substituted `k = g xs`, hence
 
 ~~~
 g = fold f' id
-  where f' x k z = k (f z x)
+  where f' x k y = k (f y x)
 ~~~
 
 and I finally obtain
@@ -79,7 +82,7 @@ and I finally obtain
 ~~~haskell
 myFoldl'''' :: (a -> b -> a) -> a -> [b] -> a
 myFoldl'''' f z xs = foldr f' id xs z
-  where f' x k z  = k (f z x)
+  where f' x k y  = k (f y x)
 ~~~
 
 or equivalently
@@ -87,5 +90,37 @@ or equivalently
 ~~~haskell
 myFoldl''''' :: (a -> b -> a) -> a -> [b] -> a
 myFoldl''''' f z xs = foldr f' id xs z
-  where f' x k = \z -> k (f z x)
+  where f' x k = \y -> k (f y x)
 ~~~
+
+Type signature and interpretation of function `f'`
+--------------------------------------------------
+
+In the above formulas we have
+
+~~~{.haskell .ignore}
+foldr f' id xs :: a -> a
+~~~
+
+On the other hand, the generic type signature of `foldr` is given by
+
+~~~{.haskell .ignore}
+foldr :: (q -> p -> p) -> p -> [q] -> p 
+~~~
+
+Comparing the types, we deduce that
+
+~~~
+q = b
+p = a -> a
+~~~
+
+and
+
+~~~{.haskell .ignore}
+f' :: b -> (a -> a) -> (a -> a)
+~~~
+
+That means that given a list element `x :: b` and a function `k :: a ->
+a`, function `f'` returns a new function of type `:: a -> a`, which
+given `y` returns `k (f y x)`.
