@@ -1,3 +1,6 @@
+Expressing left fold through right fold
+=======================================
+
 Derivation
 ----------
 
