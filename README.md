@@ -141,7 +141,7 @@ It expands into
 
 ~~~{.haskell .ignore}
 myFoldl''''' (+) 0 [1, 2] =
-foldr (\x k -> (\y -> k (y + x)))) id [1, 2, 3] 0 =
+foldr (\x k -> (\y -> k (y + x))) id [1, 2, 3] 0 =
 (foldr (\x k -> (\y -> k (y + x))) id [1, 2, 3]) 0
 ~~~
 
