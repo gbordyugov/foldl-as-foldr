@@ -1,5 +1,5 @@
-Expressing left fold through right fold
-=======================================
+Expressing the left fold through the right fold
+===============================================
 
 Derivation
 ----------
