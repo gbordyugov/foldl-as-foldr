@@ -141,8 +141,8 @@ It expands into
 
 ~~~{.haskell .ignore}
 myFoldl''''' (+) 0 [1, 2] =
-foldr (\x k -> (\y - k (y + x)))) id [1, 2, 3] 0 =
-(foldr (\x k -> (\y - k (y + x))) id [1, 2, 3]) 0
+foldr (\x k -> (\y -> k (y + x)))) id [1, 2, 3] 0 =
+(foldr (\x k -> (\y -> k (y + x))) id [1, 2, 3]) 0
 ~~~
 
 Let us expand the parenthesized `foldr`:
@@ -151,40 +151,40 @@ Let us expand the parenthesized `foldr`:
 foldr (\x k y -> k (y + x)) id [1, 2, 3] =
 (\x k -> (y -> k (y + x)))
   1
-  (foldr (\x k -> (\y - k (y + x))) id [2, 3]) =
-(\x k -> (\y - k (y + x)))
+  (foldr (\x k -> (\y -> k (y + x))) id [2, 3]) =
+(\x k -> (\y -> k (y + x)))
   1
-  ((\x k -> (\y - k (y + x)))
+  ((\x k -> (\y -> k (y + x)))
     2
-    (foldr (\x k -> (\y - k (y + x)))) id [3])) =
-(\x k -> (\y - k (y + x)))
+    (foldr (\x k -> (\y -> k (y + x)))) id [3])) =
+(\x k -> (\y -> k (y + x)))
   1
-  ((\x k -> (\y - k (y + x)))
+  ((\x k -> (\y -> k (y + x)))
     2
-    ((\x k -> (\y - k (y + x)))
+    ((\x k -> (\y -> k (y + x)))
       3
-      (foldr (\x k -> (\y - k (y + x))) id []))) =
-(\x k -> (\y - k (y + x)))
+      (foldr (\x k -> (\y -> k (y + x))) id []))) =
+(\x k -> (\y -> k (y + x)))
   1
-  ((\x k -> (\y - k (y + x)))
+  ((\x k -> (\y -> k (y + x)))
     2
-    ((\x k -> (\y - k (y + x)))
+    ((\x k -> (\y -> k (y + x)))
       3
       id)) =
-(\x k -> (\y - k (y + x))))
+(\x k -> (\y -> k (y + x))))
   1
-  ((\x k -> (\y - k (y + x)))
+  ((\x k -> (\y -> k (y + x)))
     2
     (\y -> id (3 + y))) =
-(\x k -> (\y - k (y + x))))
+(\x k -> (\y -> k (y + x))))
   1
-  ((\x k -> (\y - k (y + x)))
+  ((\x k -> (\y -> k (y + x)))
     2
     (\y -> 3 + y)) =
-(\x k -> (\y - k (y + x)))
+(\x k -> (\y -> k (y + x)))
   1
   (\y -> (\y -> 3 + y) (y + 2)) =
-(\x k -> (\y - k (y + x)))
+(\x k -> (\y -> k (y + x)))
   1
   (\y -> 5 + y) =
 (\y -> (\y -> 5 + y) (y + 1)) =
